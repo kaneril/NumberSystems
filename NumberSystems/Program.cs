@@ -41,7 +41,9 @@ namespace NumberSystems
             var NewBase = Console.ReadLine();
             if (CheckInput(numeric, OldBase, NewBase, alphabet))
             {
-
+                var DecimalNumeric = TransferNumericToDecimal(numeric, OldBase, alphabet);
+                var NewNumeric = TransferNumericFromDecimal(DecimalNumeric, NewBase, alphabet);
+                Console.WriteLine("Число " + numeric + " успешно переведено из " + OldBase + " системы счисления в " + NewBase + " систему счисления\nРезультат: " + NewNumeric);
             }
         }
         static bool CheckInput(string numeric, string OldBase, string NewBase, string alphabet)
@@ -90,6 +92,27 @@ namespace NumberSystems
                 return false;
             }
             return true;
+        }
+        static ulong TransferNumericToDecimal(string numeric, string OldBase, string alphabet)
+        {
+            int NumBase = Int32.Parse(OldBase);
+            ulong DecimalNumeric = 0;
+            for(var i=0; i<numeric.Length; i++)
+            {
+                DecimalNumeric += (ulong)((int)Char.GetNumericValue(numeric[i]) * Math.Pow(NumBase, numeric.Length-i-1));
+            }
+            return DecimalNumeric;
+        }
+        static string TransferNumericFromDecimal(ulong DecimalNumeric, string NewBase, string alphabet)
+        {
+            ulong NumBase = UInt64.Parse(NewBase);
+            string NewNumeric = "";
+            while(DecimalNumeric!=0)
+            {
+                NewNumeric = alphabet[(int)(DecimalNumeric % NumBase)]+ NewNumeric;
+                DecimalNumeric /= NumBase;
+            }
+            return NewNumeric;
         }
     }
 }
